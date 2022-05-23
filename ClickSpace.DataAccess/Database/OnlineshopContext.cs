@@ -2,18 +2,17 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using ClickSpace.DataAccess.Database;
+using ClickSpace.OnlineShop.DataAccess.Configurations.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ClickSpace.DataAccess.Database
+namespace ClickSpace.DataAccess.DB.Database
 {
-    public partial class ClickspaceOnlineshopContext : DbContext
+    public partial class OnlineshopContext : IdentityDbContext<APIUser>
     {
-        public ClickspaceOnlineshopContext()
-        {
-        }
-
-        public ClickspaceOnlineshopContext(DbContextOptions<ClickspaceOnlineshopContext> options)
+        public OnlineshopContext(DbContextOptions<OnlineshopContext> options)
             : base(options)
         {
         }
@@ -21,10 +20,15 @@ namespace ClickSpace.DataAccess.Database
         public virtual DbSet<CartProduct> CartProduct { get; set; }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<ProductPicture> ProductPicture { get; set; }
-        public virtual DbSet<User> User { get; set; }
+        //public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
             modelBuilder.Entity<CartProduct>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -57,6 +61,15 @@ namespace ClickSpace.DataAccess.Database
                 entity.Property(e => e.Title).HasMaxLength(200);
             });
 
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Title).HasMaxLength(200);
+
+                entity.Property(e => e.PictureUrl).HasColumnName("PictureURL");
+            });
+
             modelBuilder.Entity<ProductPicture>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -71,7 +84,7 @@ namespace ClickSpace.DataAccess.Database
                     .HasConstraintName("FK_ProductPicture_Product");
             });
 
-            modelBuilder.Entity<User>(entity =>
+            /*modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -83,14 +96,14 @@ namespace ClickSpace.DataAccess.Database
 
                 entity.Property(e => e.LastName).HasMaxLength(50);
 
-                entity.Property(e => e.Password).HasMaxLength(100);
+                entity.Property(e => e.PasswordHash).HasMaxLength(100);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(50);
 
                 entity.Property(e => e.ProfilePictureUrl).HasColumnName("ProfilePictureURL");
 
                 entity.Property(e => e.RegisterDate).HasColumnType("date");
-            });
+            });*/
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 2,
-   "ContextClassName": "ClickspaceOnlineshopContext",
+   "ContextClassName": "OnlineshopContext",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
@@ -8,7 +8,7 @@
    "ModelNamespace": null,
    "OutputContextPath": "Database",
    "OutputPath": "Database",
-   "ProjectRootNamespace": "ClickSpace.DataAccess",
+   "ProjectRootNamespace": "ClickSpace.DataAccess.DB",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,

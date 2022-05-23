@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClickSpace.DataAccess.Database
+namespace ClickSpace.DataAccess.DB.Database
 {
     public partial class ProductPicture
     {

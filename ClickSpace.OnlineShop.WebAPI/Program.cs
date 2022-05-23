@@ -1,28 +1,64 @@
-using ClickSpace.DataAccess;
-using ClickSpace.DataAccess.Database;
-using ClickSpace.DataAccess.Repository;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
+using ClickSpace.DataAccess.DB.Database;
+using ClickSpace.OnlineShop.BAL.Mapper;
+using ClickSpace.OnlineShop.WebAPI.Extensions;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization headewr using the Bearer scheme.
+            Enter 'Bearer' [space] and then your token in the text input below.
+            Example: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
 
-builder.Services.AddScoped<IRepository<Product>, Repository<Product>>(); // DI example
-builder.Services.AddDbContext<ClickspaceOnlineshopContext>(x => x.UseSqlServer("Data Source=localhost;Initial Catalog=ClickSpace.OnlineShop;Integrated Security=True"));
-var app = builder.Build();
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "0auth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
+});
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+builder.Services.AddAutoMapper(typeof(MappingProfile)); // Injecting AutoMapper Object
+
+builder.Services.ConfigureDBContext();
+
+builder.Services.ConfigureServicesInjections();
+
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
+
+
+
+
+var app = builder.Build();  // Building Inbuilt Services Container
+
+if (app.Environment.IsDevelopment()) // Configure the HTTP request pipeline.
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -31,6 +67,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();

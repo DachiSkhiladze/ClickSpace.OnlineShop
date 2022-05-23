@@ -1,4 +1,4 @@
-namespace ClickSpace.OnlineShop.WebAPI
+namespace ClickSpace.Shop.API
 {
     public class WeatherForecast
     {

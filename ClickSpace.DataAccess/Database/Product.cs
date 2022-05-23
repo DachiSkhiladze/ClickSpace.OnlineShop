@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClickSpace.DataAccess.Database
+namespace ClickSpace.DataAccess.DB.Database
 {
     public partial class Product
     {
@@ -18,6 +18,7 @@ namespace ClickSpace.DataAccess.Database
         public string Description { get; set; }
         public DateTime? PostDate { get; set; }
         public long? CategoryId { get; set; }
+        public double? Price { get; set; }
 
         public virtual ICollection<CartProduct> CartProduct { get; set; }
         public virtual ICollection<ProductPicture> ProductPicture { get; set; }

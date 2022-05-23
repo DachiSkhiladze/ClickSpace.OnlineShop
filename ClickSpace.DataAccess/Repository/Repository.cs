@@ -1,22 +1,35 @@
-﻿using ClickSpace.DataAccess.Database;
+﻿using ClickSpace.DataAccess.DB.Database;
+using System.Linq.Expressions;
+
 namespace ClickSpace.DataAccess.Repository
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
     {
-        protected readonly ClickspaceOnlineshopContext onlineshopDBContext;
+        protected readonly OnlineshopContext onlineshopDBContext;
 
-        public Repository(ClickspaceOnlineshopContext clickspaceOnlineshopContext)
+        public Repository(OnlineshopContext clickspaceOnlineshopContext)
         {
             onlineshopDBContext = clickspaceOnlineshopContext;
         }
 
-        public List<TEntity> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-                var res = onlineshopDBContext.Set<TEntity>();
-                return res.ToList();
+            try
+            {
+                return onlineshopDBContext.Set<TEntity>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Could not be returned: {ex.Message}");
+            }
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
+        {
+            return GetAll().Where(predicate.Compile()).AsQueryable();
+        }
+
+        public async Task<TEntity> AddAsync(TEntity entity) 
         {
             if (entity == null)
             {
@@ -27,12 +40,11 @@ namespace ClickSpace.DataAccess.Repository
             {
                 await onlineshopDBContext.AddAsync(entity);
                 await onlineshopDBContext.SaveChangesAsync();
-
                 return entity;
             }
             catch (Exception ex)
             {
-                throw new Exception($"{nameof(entity)} could not be saved: {ex.Message}");
+                throw new Exception($"{nameof(entity)} could not be saved: {ex.InnerException}");
             }
         }
 

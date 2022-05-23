@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClickSpace.DataAccess.Database
+namespace ClickSpace.DataAccess.DB.Database
 {
     public partial class User
     {
@@ -12,11 +12,11 @@ namespace ClickSpace.DataAccess.Database
             CartProduct = new HashSet<CartProduct>();
         }
 
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
         public DateTime? RegisterDate { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public bool? IsAdmin { get; set; }

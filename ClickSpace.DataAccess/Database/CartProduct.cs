@@ -3,13 +3,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace ClickSpace.DataAccess.Database
+namespace ClickSpace.DataAccess.DB.Database
 {
     public partial class CartProduct
     {
         public long Id { get; set; }
         public long ProductId { get; set; }
-        public long UserId { get; set; }
+        public string UserId { get; set; }
+        public int Quantity { get; set; }
 
         public virtual Product Product { get; set; }
         public virtual User User { get; set; }
