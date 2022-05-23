@@ -7,7 +7,6 @@ using ClickSpace.OnlineShop.BAL.Services.Auth;
 
 namespace ClickSpace.OnlineShop.WebAPI.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
@@ -29,7 +28,6 @@ namespace ClickSpace.OnlineShop.WebAPI.Controllers
             return res;
         }
 
-        [Authorize]
         [Route("GetAllProducts")]
         [HttpGet]
         public IEnumerable<ProductModel> Get()
@@ -46,7 +44,6 @@ namespace ClickSpace.OnlineShop.WebAPI.Controllers
             return res;
         }
 
-        [Authorize(Roles = "Administrator")]
         [Route("GetProductsByTitle")]
         [HttpGet]
         public IEnumerable<ProductModel> GetByTitle(string title="")
