@@ -6,6 +6,7 @@ using ClickSpace.OnlineShop.BAL.Services;
 using ClickSpace.OnlineShop.BAL.Services.Abstractions;
 using ClickSpace.OnlineShop.BAL.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -34,11 +35,14 @@ namespace ClickSpace.OnlineShop.WebAPI.Extensions
             services.AddScoped<ProductServices>();
             services.AddScoped<UserManager<APIUser>>();
 
+            services.AddTransient<IRepository<ProductPicture>, Repository<ProductPicture>>();
             services.AddTransient<IRepository<Product>, Repository<Product>>();
             services.AddTransient<IRepository<APIUser>, Repository<APIUser>>();
             services.AddTransient<IRepository<CartProduct>, Repository<CartProduct>>();
             services.AddTransient<IProductServices, ProductServices>();
             services.AddTransient<ICartProductServices, CartProductServices>();
+            services.AddTransient<IProductPictureServices, ProductPictureServices>();
+
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IAuthManager, AuthManager>();
         }
